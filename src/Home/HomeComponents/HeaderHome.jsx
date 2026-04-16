@@ -16,7 +16,7 @@ export default function HeaderHome() {
             <input
               type="text"
               class="search-input"
-              placeholder="Search for gyms, boxing clubs and sports centers..."
+              placeholder="Search for gyms, boxing clubs and sports centres..."
             />
             <button class="search-btn">
               <svg
