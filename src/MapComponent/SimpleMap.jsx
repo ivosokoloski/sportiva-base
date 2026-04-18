@@ -24,7 +24,7 @@ const fitnessCenters = [
   { id: 7, name: "FFitness", pos: [41.3458, 21.544] },
 ];
 
-const ModernMap = () => {
+const ModernMap = ({ costumStyle }) => {
   const prilepCenter = [41.3461, 21.554];
   return (
     <div className="map-wrapper">
@@ -32,7 +32,12 @@ const ModernMap = () => {
         center={prilepCenter}
         zoom={13}
         zoomControl={false} // Го тргаме за почист изглед
-        style={{ height: "350px", width: "350px", borderRadius: "15px" }}
+        style={{
+          height: "350px",
+          width: "350px",
+          borderRadius: "15px",
+          ...costumStyle,
+        }}
       >
         {/* Модерен Dark Tile Layer */}
         <TileLayer
@@ -67,11 +72,15 @@ const ModernMap = () => {
           border-radius: 15px;
           overflow: hidden;
         }
-        .map-wrapper:hover {
+        .header_map .map-wrapper:hover {
             transform: scale(1.2);
             transition: transform 0.6s ease;
 
         }
+        .explore-map-container .map-wrapper {
+            height: 100vh;
+        }
+       
         
 
         .neon-wrapper {

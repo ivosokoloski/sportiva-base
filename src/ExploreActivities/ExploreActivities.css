@@ -1,0 +1,205 @@
+:root {
+  --neon-cyan: #00f3ff;
+  --bg-dark: #0a0f18;
+  --card-bg: #161c28;
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --border-color: #2d3748;
+}
+.explore-container {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  padding: 2rem;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  height: calc(100vh - 68.4px);
+  display: flex;
+  gap: 1%;
+  justify-content: space-between;
+}
+
+.platform-container {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  padding: 2rem;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  width: 50%;
+  flex-grow: 1;       /* Да го пополни преостанатиот простор под навбарот */
+  overflow-y: auto;   /* Овозможува скролање само на доле (вертикално) */
+  overflow-x: hidden; /* Спречува хоризонтално скролање */
+  height: 100%;
+}
+/* Custom scrollbar styles */
+
+.platform-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.platform-container::-webkit-scrollbar-track {
+  background: #0a0a0a; /* Темна позадина */
+}
+
+.platform-container::-webkit-scrollbar-thumb {
+  background: #00f3ff; /* Неонско зелена или твојата боја */
+  border-radius: 10px;
+}
+
+/* --- Filter Styles --- */
+.filter-section {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 8px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 0.9rem;
+}
+
+.filter-chip:hover,
+.filter-chip.active {
+  background: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+}
+
+/* --- Grid Layout --- */
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- Card Styles --- */
+.activity-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  display: flex; /* Image left, content right */
+  overflow: hidden;
+  transition:
+    transform 0.3s,
+    border-color 0.3s;
+  height: 180px; /* Fixed height for rectangular look */
+}
+
+.activity-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--neon-cyan);
+}
+
+.card-image {
+  width: 150px;
+  min-width: 150px;
+  height: 100%;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(20%);
+}
+
+.card-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.category-tag {
+  font-size: 0.7rem;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.location-name {
+  margin: 5px 0;
+  font-size: 1.15rem;
+}
+
+.address {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* --- Buttons --- */
+.card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.btn-details {
+  background: #2d3748;
+  color: white;
+}
+
+.btn-directions {
+  background: var(--neon-cyan);
+  color: #000;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+
+
+
+/* Mobile View Adjustments */
+@media (max-width: 480px) {
+  .activities-grid {
+    grid-template-columns: 1fr;
+  }
+  .activity-card {
+    flex-direction: column;
+    height: auto;
+  }
+  .card-image {
+    width: 100%;
+    height: 120px;
+  }
+}

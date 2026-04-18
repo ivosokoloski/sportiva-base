@@ -1,4 +1,5 @@
 import './Navbar.css'
+import  {Link} from 'react-router'
 
 function Navbar() {
   return (
@@ -8,9 +9,9 @@ function Navbar() {
       </div>
 
       <div className="navbar-center">
-        <a href="#home" className="nav-link">Home</a>
-        <a href="#explore" className="nav-link">Explore</a>
-        <a href="#how" className="nav-link">How it works</a>
+        <Link to="/" className="nav-link">Home</Link>
+        <Link to="explore-activities" className="nav-link">Explore</Link>
+        <Link to="how" className="nav-link">How it works</Link>
       </div>
     </nav>
   )

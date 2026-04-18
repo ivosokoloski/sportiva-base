@@ -2,10 +2,10 @@ import React from "react";
 
 export default function MainHome() {
   return (
-    <main class="container">
-      <section class="left-section">
+    <main className="container">
+      <section className="left-section">
         <div className="activiry-categories">
-          <div class="card">
+          <div className="card">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 45 45"
@@ -39,7 +39,7 @@ export default function MainHome() {
             </svg>
             <h2>Gyms</h2>
           </div>
-          <div class="card">
+          <div className="card">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -63,7 +63,7 @@ export default function MainHome() {
             </svg>
             <h2>Boxing</h2>
           </div>
-          <div class="card">
+          <div className="card">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -94,58 +94,58 @@ export default function MainHome() {
             <h2>Sports Halls</h2>
           </div>
         </div>
-        <section class="popular-gyms">
-          <h2 class="section-title">Popular Gyms</h2>
+        <section className="popular-gyms">
+          <h2 className="section-title">Popular Gyms</h2>
 
-          <div class="gym-container">
-            <div class="gym-card">
-              <div class="gym-image">
+          <div className="gym-container">
+            <div className="gym-card">
+              <div className="gym-image">
                 <img src="" alt="Vardar Sport Center" />
               </div>
-              <div class="gym-info">
+              <div className="gym-info">
                 <h3>Magnus Fitness</h3>
-                <div class="rating">
-                  <span class="star">★</span>
-                  <span class="star">★</span>
-                  <span class="star">★</span>
-                  <span class="star">★</span>
-                  <span class="star">☆</span>
-                  <span class="rating-text">(4.8)</span>
+                <div className="rating">
+                  <span className="star">★</span>
+                  <span className="star">★</span>
+                  <span className="star">★</span>
+                  <span className="star">★</span>
+                  <span className="star">☆</span>
+                  <span className="rating-text">(4.8)</span>
                 </div>
-                <button class="details-btn">Details</button>
+                <button className="details-btn">Details</button>
               </div>
             </div>
 
-            <div class="gym-card">
-              <div class="gym-image">
+            <div className="gym-card">
+              <div className="gym-image">
                 <img src="" alt="Vardar Sport Center" />
               </div>
-              <div class="gym-info">
+              <div className="gym-info">
                 <h3>Vardar Sport</h3>
-                <div class="rating">
-                  <span class="star">★</span>
-                  <span class="star">★</span>
-                  <span class="star">★</span>
-                  <span class="star">★</span>
-                  <span class="star">★</span>
-                  <span class="rating-text">(5.0)</span>
+                <div className="rating">
+                  <span className="star">★</span>
+                  <span className="star">★</span>
+                  <span className="star">★</span>
+                  <span className="star">★</span>
+                  <span className="star">★</span>
+                  <span className="rating-text">(5.0)</span>
                 </div>
-                <button class="details-btn">Details</button>
+                <button className="details-btn">Details</button>
               </div>
             </div>
           </div>
         </section>
       </section>
 
-      <section class="right-section">
+      <section className="right-section">
         <h2>Why Choose Us?</h2>
-        <div class="stats-container">
+        <div className="stats-container">
           <p>
             Currently, our platform hosts over <strong>150+</strong> active
             fitness opportunities, featuring:
           </p>
 
-          <ul class="stats-list">
+          <ul className="stats-list">
             <li>
               <strong>45</strong> Premium Gyms
             </li>
@@ -157,7 +157,7 @@ export default function MainHome() {
             </li>
           </ul>
 
-          <p class="users-count">
+          <p className="users-count">
             Join a growing community of over <strong>5,000</strong> registered
             users reaching their goals every day!
           </p>
