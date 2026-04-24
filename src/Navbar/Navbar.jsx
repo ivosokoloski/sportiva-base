@@ -1,6 +1,8 @@
 import './Navbar.css';
-import { Link } from 'react-router-dom'; // Провери дали е react-router-dom
+import { Link } from 'react-router-dom'; 
 import logo from '../assets/logo.png'
+
+
 function Navbar() {
   return (
     <nav className="navbar">

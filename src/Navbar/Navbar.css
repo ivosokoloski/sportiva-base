@@ -31,10 +31,10 @@
 .brand-name {
   font-size: 22px;
   font-weight: 800;
-  color: #4a3aff; /* Боја која одговара на виолетовата од сликата */
+  color: #4a3aff; 
 }
 
-/* Централни линкови */
+
 .navbar-center {
   flex: 1;
   display: flex;
