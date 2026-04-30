@@ -103,7 +103,7 @@ const ActivityDetails = () => {
             <div className="glass-card map-card">
               <h3>Location</h3>
               <div className="map-container-styled">
-                <SimpleMap />
+                <SimpleMap detailsActivity={activity} />
               </div>
               <div className="address-info">
                 <span className="icon">📍</span>

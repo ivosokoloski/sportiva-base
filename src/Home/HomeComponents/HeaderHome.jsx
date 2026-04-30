@@ -4,11 +4,17 @@ import SimpleMap from "../../MapComponent/SimpleMap";
 
 export default function HeaderHome() {
   const [activities, setActivities] = useState([]);
+  const [users, setUsers] = useState(0);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/activities/")
       .then((response) => response.json())
       .then((data) => setActivities(data))
+      .catch((err) => console.error(err));
+
+    fetch("http://127.0.0.1:8000/api/users/")
+      .then((response) => response.json())
+      .then((data) => setUsers(data.length))
       .catch((err) => console.error(err));
   }, []);
 
@@ -75,7 +81,7 @@ export default function HeaderHome() {
               </div>  
               <div class="stat-card highlight">
                 <div class="card-inner">
-                  <span class="stat-number">5k+</span>
+                  <span class="stat-number">{users}</span>
                   <span class="stat-label">Users</span>
                 </div>
               </div>

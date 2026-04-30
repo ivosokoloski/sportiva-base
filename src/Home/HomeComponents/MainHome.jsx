@@ -7,13 +7,13 @@ export default function MainHome() {
   const navigate = useNavigate();
 
   const goToGyms = () => {
-    navigate("/explore-activities", { state: { category: "Gym" } }); // Испраќаме параметар во URL
+    navigate("/explore-activities?category=gym", { state: { category: "Gym" } }); // Испраќаме параметар во URL
   };
   const goToBoxing = () => {
-    navigate("/explore-activities", { state: { category: "Boxing" } }); // Испраќаме параметар во URL
+    navigate("/explore-activities?category=boxing", { state: { category: "Boxing" } }); // Испраќаме параметар во URL
   };
   const goToSportsHalls = () => {
-    navigate("/explore-activities", { state: { category: "Sports Halls" } }); // Испраќаме параметар во URL
+    navigate("/explore-activities?category=sports_hall", { state: { category: "Sports Halls" } }); // Испраќаме параметар во URL
   };
 
 

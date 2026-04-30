@@ -1,15 +1,21 @@
 import "./ExploreActivities.css";
 import SimpleMap from "../MapComponent/SimpleMap";
-import React, { useState, useEffect } from "react"; 
-import { useLocation, Link } from "react-router-dom"; // Додаден Link
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom"; // Додаден Link
 
 export default function ExploreActivities() {
   const [activities, setActivities] = useState([]);
-  const location = useLocation(); 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [selectedCategory, setSelectedCategory] = useState(() => {
     const params = new URLSearchParams(location.search);
     return params.get("category") || "All";
   });
+
+  const handleCategoryChange = (category) => {
+    navigate(`?category=${category}`);
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -42,25 +48,25 @@ export default function ExploreActivities() {
             <div className="filter-bar">
               <button
                 className={`filter-chip set ${selectedCategory === "All" ? "active" : ""}`}
-                onClick={() => setSelectedCategory("All")}
+                onClick={() => handleCategoryChange("All")}
               >
                 All
               </button>
               <button
                 className={`filter-chip ${selectedCategory === "gym" ? "active" : ""}`}
-                onClick={() => setSelectedCategory("gym")}
+                onClick={() => handleCategoryChange("gym")}
               >
                 Gyms
               </button>
               <button
                 className={`filter-chip ${selectedCategory === "boxing" ? "active" : ""}`}
-                onClick={() => setSelectedCategory("boxing")}
+                onClick={() => handleCategoryChange("boxing")}
               >
                 Boxing
               </button>
               <button
                 className={`filter-chip ${selectedCategory === "sports_hall" ? "active" : ""}`}
-                onClick={() => setSelectedCategory("sports_hall")}
+                onClick={() => handleCategoryChange("sports_hall")}
               >
                 Sports Halls
               </button>
@@ -95,8 +101,11 @@ export default function ExploreActivities() {
                   </div>
                   <div className="card-actions">
                     {/* ПРОМЕНЕТО: Сега води кон рутата за детали со точното ID */}
-                    <Link to={`/details/${activity.id}`} className="btn btn-details">
-                        Details
+                    <Link
+                      to={`/details/${activity.id}`}
+                      className="btn btn-details"
+                    >
+                      Details
                     </Link>
                   </div>
                 </div>
@@ -109,6 +118,6 @@ export default function ExploreActivities() {
           costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" }}
         />
       </div>
-    </> 
+    </>
   );
 }
