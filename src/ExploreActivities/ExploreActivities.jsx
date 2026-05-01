@@ -6,6 +6,8 @@ import { useLocation, useNavigate, Link } from "react-router-dom"; // Додад
 export default function ExploreActivities() {
   const [activities, setActivities] = useState([]);
   const [activityTypes, setActivityTypes] = useState([]);
+  const [sortOption, setSortOption] = useState("");
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -15,16 +17,19 @@ export default function ExploreActivities() {
   });
 
   const handleCategoryChange = (category) => {
-    setSelectedCategory(category)
+    setSelectedCategory(category);
     navigate(`?category=${category}`);
+  };
+  const handleSortChange = (sortOption) => {
+    setSortOption(sortOption);
   };
 
   useEffect(() => {
-  const params = new URLSearchParams(location.search);
-  const cat = params.get("category")|| "All";
-  setSelectedCategory(cat);
-  setActivityTypes(cat); 
-}, [location.search]);
+    const params = new URLSearchParams(location.search);
+    const cat = params.get("category") || "All";
+    setSelectedCategory(cat);
+    setActivityTypes(cat);
+  }, [location.search]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/activities/")
@@ -39,6 +44,16 @@ export default function ExploreActivities() {
     if (!activity) return false;
     if (selectedCategory === "All") return true;
     return activity.activity_type === selectedCategory;
+  }).sort((a, b) => {
+    if (sortOption === "top_rated") {
+      return b.average_rating - a.average_rating;
+    }
+
+    if (sortOption === "most_reviewed") {
+      return b.reviews_count - a.reviews_count;
+    }
+
+    return 0;
   });
 
   return (
@@ -73,6 +88,14 @@ export default function ExploreActivities() {
                 Sports Halls
               </button>
             </div>
+            <div className="sort-box">
+              <span className="sort-label">Sort By</span>
+              <select onChange={(e) => handleSortChange(e.target.value)} className="sort-select">
+                <option value="">Select</option>
+                <option value="top_rated">Top Rated</option>
+                <option value="most_reviewed">Most Reviewed</option>
+              </select>
+            </div>
           </header>
 
           <div className="activities-grid">
@@ -98,7 +121,7 @@ export default function ExploreActivities() {
                       ),
                     )}
                     <span className="rating-text">
-                      ({activity.average_rating})
+                      ({activity.reviews_count})
                     </span>
                   </div>
                   <div className="card-actions">
@@ -117,7 +140,8 @@ export default function ExploreActivities() {
         </div>
         <div className="explore-map-container"></div>
         <SimpleMap
-          costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" } } activityType={activityTypes} 
+          costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" }}
+          activityType={activityTypes}
         />
       </div>
     </>

@@ -142,7 +142,7 @@ export default function MainHome() {
                           ),
                         )}
                         <span className="rating-text">
-                          ({activity.average_rating})
+                          ({activity.reviews_count})
                         </span>
                       </div>
                       <button className="details-btn">Details</button>
