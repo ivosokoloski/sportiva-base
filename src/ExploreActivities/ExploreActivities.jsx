@@ -3,8 +3,7 @@ import SimpleMap from "../MapComponent/SimpleMap";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom"; // Додаден Link
 
-export default function ExploreActivities() {
-  const [activities, setActivities] = useState([]);
+export default function ExploreActivities({ activities }) {
   const [activityTypes, setActivityTypes] = useState([]);
   const [sortOption, setSortOption] = useState("");
 
@@ -31,30 +30,23 @@ export default function ExploreActivities() {
     setActivityTypes(cat);
   }, [location.search]);
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/activities/")
-      .then((response) => response.json())
-      .then((data) => {
-        setActivities(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+  const filteredActivities = (activities || [])
+    .filter((activity) => {
+      if (!activity) return false;
+      if (selectedCategory === "All") return true;
+      return activity.activity_type === selectedCategory;
+    })
+    .sort((a, b) => {
+      if (sortOption === "top_rated") {
+        return b.average_rating - a.average_rating;
+      }
 
-  const filteredActivities = (activities || []).filter((activity) => {
-    if (!activity) return false;
-    if (selectedCategory === "All") return true;
-    return activity.activity_type === selectedCategory;
-  }).sort((a, b) => {
-    if (sortOption === "top_rated") {
-      return b.average_rating - a.average_rating;
-    }
+      if (sortOption === "most_reviewed") {
+        return b.reviews_count - a.reviews_count;
+      }
 
-    if (sortOption === "most_reviewed") {
-      return b.reviews_count - a.reviews_count;
-    }
-
-    return 0;
-  });
+      return 0;
+    });
 
   return (
     <>
@@ -90,7 +82,10 @@ export default function ExploreActivities() {
             </div>
             <div className="sort-box">
               <span className="sort-label">Sort By</span>
-              <select onChange={(e) => handleSortChange(e.target.value)} className="sort-select">
+              <select
+                onChange={(e) => handleSortChange(e.target.value)}
+                className="sort-select"
+              >
                 <option value="">Select</option>
                 <option value="top_rated">Top Rated</option>
                 <option value="most_reviewed">Most Reviewed</option>
@@ -140,6 +135,7 @@ export default function ExploreActivities() {
         </div>
         <div className="explore-map-container"></div>
         <SimpleMap
+          activities={filteredActivities}
           costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" }}
           activityType={activityTypes}
         />

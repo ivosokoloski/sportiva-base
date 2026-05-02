@@ -4,11 +4,11 @@ import HeaderHome from './HomeComponents/HeaderHome';
 import MainHome from './HomeComponents/MainHome';
 
 
-export function Home() {
+export function Home({activities}) {
   return (
     <>
-        <HeaderHome />
-        <MainHome />
+        <HeaderHome activities={activities} />
+        <MainHome activities={activities} />
         <FooterHome />
     </>
   );

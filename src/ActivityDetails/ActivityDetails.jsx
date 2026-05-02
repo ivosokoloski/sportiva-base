@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import SimpleMap from "../MapComponent/SimpleMap";
 import "./ActivityDetails.css";
 
-const ActivityDetails = () => {
+const ActivityDetails = ({ activities }) => {
   const { id } = useParams();
   const [activity, setActivity] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,18 +26,17 @@ const ActivityDetails = () => {
     }) || [];
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/api/activities/${id}/`)
-      .then((res) => res.json())
-      .then((data) => {
-        const activityData = Array.isArray(data) ? data[0] : data;
-        setActivity(activityData);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching data:", err);
-        setLoading(false);
-      });
-  }, [id]);
+    if (activities && activities.length > 0) {
+      // Го наоѓаме објектот што одговара на ID-то од URL-то
+      // Внимавај: id од useParams е string, па го правиме Number
+      const foundActivity = activities.find((a) => String(a.id) === String(id));
+      
+      if (foundActivity) {
+        setActivity(foundActivity);
+      }
+      setLoading(false);
+    }
+  }, [id, activities]);
 
   const nextSlide = () => {
     setCurrentImg((prev) =>
@@ -167,7 +166,7 @@ const ActivityDetails = () => {
           {/* RIGHT SIDE - Map & Booking */}
           <div className="glass-card map-card">
             <div className="map-container-styled">
-              <SimpleMap detailsActivity={activity} />
+              <SimpleMap activities={[activity]} detailsActivity={activity} />
             </div>
             <div className="stats-row">
               <span className="rating">★ {activity.average_rating}</span>

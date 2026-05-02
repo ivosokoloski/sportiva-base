@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -15,16 +14,9 @@ const neonIcon = L.divIcon({
   iconAnchor: [10, 10],
 });
 
-const ModernMap = ({ costumStyle, detailsActivity, activityType }) => {
-  const [activities, setActivities] = useState([]);
+const ModernMap = ({ activities, costumStyle, detailsActivity, activityType }) => {
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/activities/")
-      .then((response) => response.json())
-      .then((data) => setActivities(data))
-      .catch((err) => console.error(err));
-  }, []);
-
+ 
   const handleDirections = (activity) => {
     const query = encodeURIComponent(
       ` ${activity.google_maps_address || ""}`,

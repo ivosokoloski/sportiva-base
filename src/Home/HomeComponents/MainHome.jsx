@@ -1,9 +1,7 @@
-import React, {  useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // ПРАВИЛНО
 
 
-export default function MainHome() {
-  const [activities, setActivities] = useState([]);
+export default function MainHome({activities}) {
   const navigate = useNavigate();
 
   const goToGyms = () => {
@@ -16,13 +14,6 @@ export default function MainHome() {
     navigate("/explore-activities?category=sports_hall", { state: { category: "Sports Halls" } }); // Испраќаме параметар во URL
   };
 
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/activities/")
-      .then((response) => response.json())
-      .then((data) => setActivities(data))
-      .catch((err) => console.error(err));
-  }, []);
 
   return (
     <main className="container">
@@ -39,40 +30,40 @@ export default function MainHome() {
               <path
                 d="M33 16.5H35C35.552 16.5 36 16.948 36 17.5V27.5C36 28.052 35.552 28.5 35 28.5H33C32.448 28.5 32 28.052 32 27.5V17.5C32 16.948 32.448 16.5 33 16.5Z"
                 stroke="#3C3C3C"
-                stroke-width="2"
+                strokeWidth="2"
               />
               <path
                 d="M29 12.5H31C31.552 12.5 32 12.948 32 13.5V31.5C32 32.052 31.552 32.5 31 32.5H29C28.448 32.5 28 32.052 28 31.5V13.5C28 12.948 28.448 12.5 29 12.5Z"
                 stroke="#3C3C3C"
-                stroke-width="2"
+                strokeWidth="2"
               />
               <path
                 d="M15 12.5H17C17.552 12.5 18 12.948 18 13.5V31.5C18 32.052 17.552 32.5 17 32.5H15C14.448 32.5 14 32.052 14 31.5V13.5C14 12.948 14.448 12.5 15 12.5Z"
                 stroke="#3C3C3C"
-                stroke-width="2"
+                strokeWidth="2"
               />
               <path
                 d="M11 16.5H13C13.552 16.5 14 16.948 14 17.5V27.5C14 28.052 13.552 28.5 13 28.5H11C10.448 28.5 10 28.052 10 27.5V17.5C10 16.948 10.448 16.5 11 16.5Z"
                 stroke="#3C3C3C"
-                stroke-width="2"
+                strokeWidth="2"
               />
-              <path d="M36 22.5H39" stroke="#3C3C3C" stroke-width="2" />
-              <path d="M18 22.5H28" stroke="#3C3C3C" stroke-width="2" />
-              <path d="M7 22.5H10" stroke="#3C3C3C" stroke-width="2" />
+              <path d="M36 22.5H39" stroke="#3C3C3C" strokeWidth="2" />
+              <path d="M18 22.5H28" stroke="#3C3C3C" strokeWidth="2" />
+              <path d="M7 22.5H10" stroke="#3C3C3C" strokeWidth="2" />
             </svg>
             <h2>Gyms</h2>
           </div>
           <div onClick={goToBoxing} className="card">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
               fill="#000000"
               width="45px"
               height="45px"
               version="1.1"
               id="Layer_1"
               viewBox="0 0 496 496"
-              xml:space="preserve"
+              xmlSpace="preserve"
             >
               <g>
                 <g>
@@ -89,7 +80,7 @@ export default function MainHome() {
           <div onClick={goToSportsHalls} className="card">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
+              xmlnsXlink="http://www.w3.org/1999/xlink"
               width="45px"
               height="45px"
               viewBox="0 0 60 60"
@@ -101,9 +92,9 @@ export default function MainHome() {
               <g
                 id="People"
                 stroke="none"
-                stroke-width="1"
+                strokeWidth="1"
                 fill="none"
-                fill-rule="evenodd"
+                fillRule="evenodd"
               >
                 <g id="Icon-43" fill="#000000">
                   <path
@@ -124,7 +115,7 @@ export default function MainHome() {
               .sort((a, b) => b.average_rating - a.average_rating)
               .slice(0, 2)
               .map((activity) => (
-                <div className="gym-container">
+                <div key={activity.id} className="gym-container">
                   <div className="gym-card">
                     <div className="gym-image">
                       <img src={activity.image} alt={activity.name} />
