@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useNavigate } from "react-router-dom"; // ПРАВИЛНО
+import { useNavigate } from "react-router-dom"; //
 
 import SimpleMap from "../../MapComponent/SimpleMap";
 
 export default function HeaderHome() {
   const [activities, setActivities] = useState([]);
-  const [searchValue,setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-  
+
   const [users, setUsers] = useState(0);
- const navigateToActivity = () => {
-    activities.map((activity) =>{
-      if(activity.name.toLowerCase().includes(searchValue.toLowerCase())) {
+  const navigateToActivity = () => {
+    activities.map((activity) => {
+      if (activity.name.toLowerCase().includes(searchValue.toLowerCase())) {
         navigate(`/details/${activity.id}`);
       }
     });
   };
-
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      navigateToActivity();  
+    }
+  };
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/activities/")
@@ -45,9 +49,14 @@ export default function HeaderHome() {
               type="text"
               class="search-input"
               placeholder="Search for gyms, boxing clubs and sports centres..."
+              onKeyDown={handleKeyDown}
               onChange={(e) => setSearchValue(e.target.value)}
             />
-            <button class="search-btn" onClick={() => navigateToActivity()}>
+            <button
+              class="search-btn"
+              onKeyDown={handleKeyDown}
+              onClick={() => navigateToActivity()}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -76,23 +85,36 @@ export default function HeaderHome() {
             <div class="stats-grid">
               <div class="stat-card">
                 <div class="card-inner">
-                  <span class="stat-number">{activities.filter((a) => a.activity_type === "gym").length}</span>
+                  <span class="stat-number">
+                    {activities.filter((a) => a.activity_type === "gym").length}
+                  </span>
                   <span class="stat-label">Gyms</span>
                 </div>
               </div>
               <div class="stat-card">
                 <div class="card-inner">
-                  <span class="stat-number">{activities.filter((a) => a.activity_type === "boxing").length}</span>
+                  <span class="stat-number">
+                    {
+                      activities.filter((a) => a.activity_type === "boxing")
+                        .length
+                    }
+                  </span>
                   <span class="stat-label">Boxing</span>
                 </div>
               </div>
 
               <div class="stat-card">
                 <div class="card-inner">
-                  <span class="stat-number">{activities.filter((a) => a.activity_type === "sports_hall").length}</span>
+                  <span class="stat-number">
+                    {
+                      activities.filter(
+                        (a) => a.activity_type === "sports_hall",
+                      ).length
+                    }
+                  </span>
                   <span class="stat-label">Halls</span>
                 </div>
-              </div>  
+              </div>
               <div class="stat-card highlight">
                 <div class="card-inner">
                   <span class="stat-number">{users}</span>

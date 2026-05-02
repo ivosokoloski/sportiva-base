@@ -145,7 +145,6 @@ a:active {
 .stats-row {
   display: flex;
   align-items: top;
-  justify-content: flex-start;
   gap: 15px;
   color: #aaa;
   margin-bottom: 30px;
@@ -322,6 +321,110 @@ a:active {
   color: #ccc;
   line-height: 1.8;
   font-size: 16px;
+}
+
+.review-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  width: 320px;
+  min-height: 150px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--neon-cyan), #0080ff);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: 800;
+  font-size: 1.2rem;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.status {
+  color: var(--neon-cyan);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.rating {
+  color: var(--neon-cyan);
+  filter: drop-shadow(0 0 5px var(--neon-cyan));
+  font-size: 0.9rem;
+}
+
+.review-body p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Скриен неонски сјај кој се појавува на hover */
+.card-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.review-card:hover .card-glow {
+  opacity: 1;
+}
+.review-card-section {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  overflow-y: auto;
+  padding-right: 5px;
+  max-height: 45vh
 }
 
 /* Mobile Adjustments */

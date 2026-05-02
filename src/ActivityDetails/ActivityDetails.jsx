@@ -118,7 +118,6 @@ const ActivityDetails = () => {
             <div className="hero-info">
               <span className="badge-category">{activity.activity_type}</span>
               <h1 className="main-title">{activity.name}</h1>
-              
             </div>
 
             {/* MODERN SLIDER SECTION */}
@@ -166,18 +165,45 @@ const ActivityDetails = () => {
           </div>
 
           {/* RIGHT SIDE - Map & Booking */}
-            <div className="glass-card map-card">
-              <div className="map-container-styled">
-                <SimpleMap detailsActivity={activity} />
-              </div>
-             <div className="stats-row">
-                <span className="rating">★ {activity.average_rating}</span>
-                <span className="divider">|</span>
-                <span className="reviews">
-                  {activity.reviews_count} Reviews
-                </span>
-              </div>
+          <div className="glass-card map-card">
+            <div className="map-container-styled">
+              <SimpleMap detailsActivity={activity} />
             </div>
+            <div className="stats-row">
+              <span className="rating">★ {activity.average_rating}</span>
+              <span className="divider">|</span>
+              <span className="reviews">{activity.reviews_count} Reviews</span>
+            </div>
+
+            <div className="review-card-section slots-scroll-container">
+              {activity?.reviews?.map((review) => (
+                <div key={review.id} className="review-card">
+                  <div className="review-header">
+                    <div className="user-profile">
+                      <div className="avatar">
+                        {review?.user_name.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="user-details">
+                        <span className="username">{review.user_name.charAt(0).toUpperCase() + review.user_name.slice(1)}</span>
+                      </div>
+                    </div>
+                    <div className="rating">
+                      {Array.from({ length: Math.round(review.rating || 5) }).map((_, i) => (
+                        <span key={i} className="star">★</span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="review-body">
+                    <p>{review.comment}</p>
+                  </div>
+
+                  <div className="card-glow" />
+                </div>
+              ))}
+            </div>
+            
+          </div>
         </div>
       </div>
     </div>
