@@ -41,6 +41,13 @@ function Navbar() {
       <div className="navbar-center">
         <Link to="/" className="nav-link">Home</Link>
         <Link to="/explore-activities" className="nav-link">Explore Activities</Link>
+        {username && (
+          <>
+            <Link to="/my-reviews" className="nav-link">My Reviews</Link>
+            <Link to="/my-reservations" className="nav-link">My Reservations</Link>
+          </>
+        )}
+
       </div>
 
       <div className='navbar-auth'>

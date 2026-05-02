@@ -8,7 +8,7 @@ const ActivityDetails = ({ activities }) => {
   const [activity, setActivity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImg, setCurrentImg] = useState(0);
-
+  const storedUser = localStorage.getItem("username");
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -26,7 +26,6 @@ const ActivityDetails = ({ activities }) => {
 
   useEffect(() => {
     if (activities && activities.length > 0) {
-     
       const foundActivity = activities.find((a) => String(a.id) === String(id));
 
       if (foundActivity) {
@@ -162,54 +161,57 @@ const ActivityDetails = ({ activities }) => {
           </div>
 
           {/* RIGHT SIDE - Map & Booking */}
-          
         </div>
         <div className="glass-card map-card">
-            <div className="map-container-styled">
-              <SimpleMap activities={[activity]} detailsActivity={activity} />
-            </div>
-            <div className="stats-row">
-              <span className="rating">★ {activity.average_rating}</span>
-              <span className="divider">|</span>
-              <span className="reviews">{activity.reviews_count} Reviews</span>
-            </div>
-
-            <div className="review-card-section slots-scroll-container">
-              {activity?.reviews?.map((review) => (
-                <div key={review.id} className="review-card">
-                  <div className="review-header">
-                    <div className="user-profile">
-                      <div className="avatar">
-                        {review?.user_name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="user-details">
-                        <span className="username">
-                          {review.user_name.charAt(0).toUpperCase() +
-                            review.user_name.slice(1)}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="rating">
-                      {Array.from({
-                        length: Math.round(review.rating || 5),
-                      }).map((_, i) => (
-                        <span key={i} className="star">
-                          ★
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="review-body">
-                    <p>{review.comment}</p>
-                  </div>
-
-                  <div className="card-glow" />
-                </div>
-              ))}
-            </div>
+          <div className="map-container-styled">
+            <SimpleMap activities={[activity]} detailsActivity={activity} />
+          </div>
+          <div className="stats-row">
+            <span className="rating">★ {activity.average_rating}</span>
+            <span className="divider">|</span>
+            <span className="reviews">{activity.reviews_count} Reviews</span>
+            
+              <span className="add-review">
+                <button className="book-action-btn">Add Review</button>
+              </span>
+            
           </div>
 
+          <div className="review-card-section slots-scroll-container">
+            {activity?.reviews?.map((review) => (
+              <div key={review.id} className="review-card">
+                <div className="review-header">
+                  <div className="user-profile">
+                    <div className="avatar">
+                      {review?.user_name.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="user-details">
+                      <span className="username">
+                        {review.user_name.charAt(0).toUpperCase() +
+                          review.user_name.slice(1)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="rating">
+                    {Array.from({
+                      length: Math.round(review.rating || 5),
+                    }).map((_, i) => (
+                      <span key={i} className="star">
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="review-body">
+                  <p>{review.comment}</p>
+                </div>
+
+                <div className="card-glow" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

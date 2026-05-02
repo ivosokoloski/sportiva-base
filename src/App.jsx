@@ -5,6 +5,7 @@ import Navbar from "./Navbar/Navbar";
 import ActivityDetails from "./ActivityDetails/ActivityDetails";
 import Signup from "./Authentications/SignUp";
 import Login from "./Authentications/Login";
+import MyReviews from "./MyReviews/MyReviews";
 import { Routes, Route } from "react-router";
 import React, { useState, useEffect } from "react";
 
@@ -28,6 +29,7 @@ function App() {
       <Routes>
         <Route index element={<Home activities={activities} />} />
         <Route path="/explore-activities" element={<ExploreActivities activities={activities} />} />
+        <Route path="/my-reviews" element={<MyReviews activities={activities} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/details/:id" element={<ActivityDetails activities={activities} />} />      
