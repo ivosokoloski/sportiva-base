@@ -60,7 +60,9 @@ body {
   border-radius: 10px;
   padding: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -191,7 +193,9 @@ body {
 .search-box:focus-within {
   width: 450px;
   border-color: #00d2ff;
-  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4), inset 0 0 10px rgba(0, 242, 255, 0.1);
+  box-shadow:
+    0 0 20px rgba(0, 242, 255, 0.4),
+    inset 0 0 10px rgba(0, 242, 255, 0.1);
 }
 
 .search-input {
@@ -260,11 +264,11 @@ body {
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
-  
+
   /* Овозможува сите картички да имаат иста висина во ред */
   display: flex;
   flex-direction: column;
-  width: 300px; 
+  width: 300px;
 }
 
 .gym-card:hover {
@@ -280,11 +284,11 @@ body {
 .gym-info {
   padding: 20px;
   text-align: left;
-  
+
   /* Ова го прави инфо делот флексибилен за да го турне копчето долу */
   display: flex;
   flex-direction: column;
-  flex-grow: 1; 
+  flex-grow: 1;
 }
 
 .gym-info h3 {
@@ -297,7 +301,7 @@ body {
   margin-bottom: 15px;
   color: #ffb400;
   /* Ова осигурува дека рејтингот и копчето секогаш ќе бидат на дното */
-  margin-top: auto; 
+  margin-top: auto;
 }
 
 .rating-text {
@@ -328,7 +332,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .stats-grid {
@@ -344,7 +348,7 @@ body {
   padding: 15px 10px;
   text-align: center;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .stat-card.wide {
@@ -391,7 +395,7 @@ body {
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive Design */
@@ -423,5 +427,60 @@ body {
 
   .gym-card {
     width: 100%; /* Картичките го заземаат целиот екран на мобилен */
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .popular-gyms {
+    min-width: 100%;
+  }
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .header-left {
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: 1.5em;
+  }
+  .search-container {
+    margin-top: 20px;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .search-box {
+    width: 70%;
+  }
+  .search-box:focus-within {
+    transform: scale(0.8);
+  }
+
+  .stats-compact-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .card {
+    flex-direction: column;
+    min-height: 200px;
+  }
+
+  .gym-container {
+    width: 100%;
+    justify-content: center;
+  }
+  .gym-card {
+    width: 100%;
+    max-width: 400px;
+  }
+  .section-title {
+    text-align: center;
+  }
+  .map-wrapper {
+    margin-top: 20px;
   }
 }

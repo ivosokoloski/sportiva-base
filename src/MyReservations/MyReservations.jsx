@@ -135,7 +135,6 @@ export default function MyReservations({ activities, reservations }) {
 
                     <div className="reservation-info">
                       <div><strong>User:</strong> {reservation.user_name}</div>
-                      <div><strong>Timeslot:</strong> {reservation.timeslot}</div>
                       <div><strong>Reserved at:</strong> {reservation.reserved_at ? new Date(reservation.reserved_at).toLocaleString() : "-"}</div>
                       <div><strong>Status:</strong> {reservation.status}</div>
                       {slot && (slot.start_time || slot.end_time) && (

@@ -6,6 +6,7 @@ import logo from '../assets/logo.png';
 function Navbar() {
   const [username, setUsername] = useState(null);
   const [showHi, setShowHi] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,6 +26,7 @@ function Navbar() {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     setUsername(null);
+    setMenuOpen(false);
     navigate('/');
     window.location.reload();
   };
@@ -37,6 +39,17 @@ function Navbar() {
           <span className="brand-name">Sportiva Base</span>
         </Link>
       </div>
+
+      <button
+        className={`hamburger-btn ${menuOpen ? 'open' : ''}`}
+        onClick={() => setMenuOpen((s) => !s)}
+        aria-label="Toggle navigation"
+        aria-expanded={menuOpen}
+      >
+        <span className="bar" />
+        <span className="bar" />
+        <span className="bar" />
+      </button>
 
       <div className="navbar-center">
         <Link to="/" className="nav-link">Home</Link>
@@ -68,6 +81,33 @@ function Navbar() {
           </>
         )}
       </div>
+
+      {menuOpen && (
+        <div className="mobile-menu">
+          <Link to="/" className="nav-link" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link to="/explore-activities" className="nav-link" onClick={() => setMenuOpen(false)}>Explore Activities</Link>
+          {username && (
+            <>
+              <Link to="/my-reviews" className="nav-link" onClick={() => setMenuOpen(false)}>My Reviews</Link>
+              <Link to="/my-reservations" className="nav-link" onClick={() => setMenuOpen(false)}>My Reservations</Link>
+              <div className="mobile-auth">
+                <span className="user-name-display">
+                  {showHi && "Hi, 👋 "}
+                  <strong>{username}</strong>
+                </span>
+                <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="logout-btn">Logout</button>
+              </div>
+            </>
+          )}
+
+          {!username && (
+            <div className="mobile-auth">
+              <Link to="/login" className="nav-link login-btn" onClick={() => setMenuOpen(false)}>Login</Link>
+              <Link to="/signup" className="signup-btn" onClick={() => setMenuOpen(false)}>Sign Up</Link>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
