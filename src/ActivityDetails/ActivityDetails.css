@@ -270,13 +270,13 @@ h4 {
 
 
 .map-panel-compact {
-  height: 220px;
+  height: 350px;
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 20px;
   border: 1px solid var(--neon);
   position: relative;
-  
+  width: 350px;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   isolation: isolate;
@@ -285,16 +285,7 @@ h4 {
 }
 
 
-.map-panel-compact > *,
-.map-panel-compact > div,
-.map-panel-compact iframe,
-.map-panel-compact canvas {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 0 !important;
-  
-  will-change: transform;
-}
+
 
 .slots-container {
   max-height: 200px;
@@ -492,7 +483,8 @@ h4 {
   }
 
   .map-panel-compact {
-    height: 160px;
+    height: 350px;
+    width: 350px;
   }
 
   .slot-row {
