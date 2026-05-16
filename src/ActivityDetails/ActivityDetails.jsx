@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import SimpleMap from "../MapComponent/SimpleMap";
+import * as FaIcons from "react-icons/fa";
+import * as MdIcons from "react-icons/md";
+import * as GiIcons from "react-icons/gi";
 import "./ActivityDetails.css";
+
+const renderIcon = (iconName) => {
+  const allIcons = { ...FaIcons, ...MdIcons, ...GiIcons };
+  const IconComponent = allIcons[iconName];
+  return IconComponent ? <IconComponent size={18} /> : null;
+};
 
 const ActivityDetails = ({ activities }) => {
   const { id } = useParams();
@@ -57,10 +66,16 @@ const ActivityDetails = ({ activities }) => {
             <div className="glass-panel services-panel">
               <h4>Available Services</h4>
               <div className="services-grid">
-                <div className="service-tag">Wi-Fi</div>
-                <div className="service-tag">Parking</div>
-                <div className="service-tag">Showers</div>
-                <div className="service-tag">Locker Rooms</div>
+                {activity.services?.length > 0 ? (
+                  activity.services.map(service => (
+                    <div key={service.id} className="service-tag">
+                      {renderIcon(service.icon)}
+                      <span>{service.name}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="no-data">No services available</p>
+                )}
               </div>
             </div>
 

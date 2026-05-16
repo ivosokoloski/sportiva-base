@@ -212,6 +212,9 @@
 .btn-details {
   background: #2d3748;
   color: white;
+  text-decoration: none;
+  text-align: center;
+  
 }
 
 .btn-directions {
