@@ -19,12 +19,26 @@ const ActivityDetails = ({ activities }) => {
   const [currentImg, setCurrentImg] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  // --- Динамички состојби за рефреш во реално време ---
+  const [reviews, setReviews] = useState([]);
+  const [slots, setSlots] = useState([]);
+
   // --- Review modal state ---
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: "" });
+  const [reviewForm, setReviewForm] = useState({
+    activity: parseInt(id),
+    user_name: localStorage.getItem("username") || "",
+    rating: 5,
+    comment: "",
+  });
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewError, setReviewError] = useState("");
-  const [reviews, setReviews] = useState([]);
+
+  // --- Reservation modal state ---
+  const [showReservationModal, setShowReservationModal] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [reservationSubmitting, setReservationSubmitting] = useState(false);
+  const [reservationError, setReservationError] = useState("");
 
   useEffect(() => {
     if (activities?.length > 0) {
@@ -32,6 +46,7 @@ const ActivityDetails = ({ activities }) => {
       if (found) {
         setActivity(found);
         setReviews(found.reviews || []);
+        setSlots(found.slots || []); // Ги полниме слотовите во локална состојба
       }
       setLoading(false);
     }
@@ -43,56 +58,133 @@ const ActivityDetails = ({ activities }) => {
     setSelectedDate(newDate);
   };
 
-  const filteredSlots = activity?.slots?.filter((slot) =>
-    new Date(slot.start_time).toDateString() === selectedDate.toDateString()
-  ) || [];
+  // Сега филтрираме од локалната состојба `slots`, а не директно од `activity.slots`
+  const filteredSlots =
+    slots?.filter(
+      (slot) =>
+        new Date(slot.start_time).toDateString() ===
+        selectedDate.toDateString(),
+    ) || [];
 
   // --- Submit Review ---
   const handleReviewSubmit = async () => {
-    if (!reviewForm.comment.trim()) {
-      setReviewError("Please write a comment.");
+    setReviewError("");
+    setReviewSubmitting(true);
+
+    if (!reviewForm.comment) {
+      setReviewError("Please fill in the comment.");
+      setReviewSubmitting(false);
       return;
     }
-    setReviewSubmitting(true);
-    setReviewError("");
 
+    const token = localStorage.getItem('token');
     try {
-      // 🔁 Change this URL to your actual backend endpoint
-      const response = await fetch(`/api/activities/${id}/reviews/`, {
+      const response = await fetch("http://127.0.0.1:8000/api/review/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Add auth token if needed:
-          // "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Token ${token}`,
         },
         body: JSON.stringify({
+          activity: reviewForm.activity,
           rating: reviewForm.rating,
           comment: reviewForm.comment,
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to submit review.");
+      const data = await response.json();
 
-      const newReview = await response.json();
-
-      // Optimistically add to local list
-      setReviews((prev) => [newReview, ...prev]);
-      setShowReviewModal(false);
-      setReviewForm({ rating: 5, comment: "" });
+      if (response.ok) {
+        window.location.reload();
+        alert("Review submitted successfully!");
+        setShowReviewModal(false);
+        
+        // Автоматски рефреш на листата со рецензии веднаш
+        setReviews([...reviews, data]);
+        
+        // Ресетирање на формата за следен пат
+        setReviewForm({
+          activity: parseInt(id),
+          user_name: localStorage.getItem("username") || "",
+          rating: 5,
+          comment: "",
+        });
+      } else {
+        console.log("Грешка од бекенд:", data);
+        setReviewError(JSON.stringify(data));
+      }
     } catch (err) {
-      setReviewError(err.message || "Something went wrong.");
+      setReviewError("Server connection failed.");
     } finally {
       setReviewSubmitting(false);
     }
   };
 
-  if (loading) return <div className="loader-screen"><div className="spinner"></div></div>;
+  // --- Open Reservation Modal ---
+  const handleBookClick = (slot) => {
+    setSelectedSlot(slot);
+    setReservationError("");
+    setShowReservationModal(true);
+  };
+
+  // --- Confirm Reservation ---
+  const handleReservationSubmit = async () => {
+    setReservationError("");
+    setReservationSubmitting(true);
+
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/reservation/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify({
+          timeslot: selectedSlot.id, // Поправено според твојот Serializer
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        window.location.reload();
+        alert("Reservation confirmed successfully!");
+        setShowReservationModal(false);
+
+        // --- Автоматски рефреш на слотовите ---
+        // Опција А: Ако сакаш веднаш да го СКИПНЕШ/ОТСТРАНИШ резервираниот слот од листата:
+        setSlots(slots.filter(s => s.id !== selectedSlot.id));
+
+        /* 
+        Опција Б: Ако твојот слот има статус (на пр. 'status': 'reserved') и сакаш да остане видлив, 
+        но да го смениш неговото однесување, откоментирај го ова подолу:
+        
+        setSlots(slots.map(s => s.id === selectedSlot.id ? { ...s, status: 'reserved' } : s));
+        */
+
+      } else {
+        console.log("Грешка при резервација:", data);
+        setReservationError(data.detail || JSON.stringify(data));
+      }
+    } catch (err) {
+      setReservationError("Server connection failed.");
+    } finally {
+      setReservationSubmitting(false);
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="loader-screen">
+        <div className="spinner"></div>
+      </div>
+    );
   if (!activity) return <div className="error-screen">Activity not found</div>;
 
   return (
     <div className="dashboard-wrapper">
       <div className="dashboard-container">
-
         <nav className="top-nav">
           <Link to="/explore-activities" className="back-link">
             <span className="arrow-icon">←</span> Back to Explore
@@ -100,7 +192,6 @@ const ActivityDetails = ({ activities }) => {
         </nav>
 
         <div className="dashboard-grid">
-
           {/* LEFT */}
           <section className="col-left">
             <div className="glass-panel main-info">
@@ -108,7 +199,9 @@ const ActivityDetails = ({ activities }) => {
               <h1 className="activity-title">{activity.name}</h1>
               <div className="rating-row">
                 <span className="stars">★ {activity.average_rating}</span>
-                <span className="count">({activity.reviews_count} reviews)</span>
+                <span className="count">
+                  ({reviews.length} reviews) {/* Се пресметува од динамичката состојба */}
+                </span>
               </div>
             </div>
 
@@ -116,7 +209,7 @@ const ActivityDetails = ({ activities }) => {
               <h4>Available Services</h4>
               <div className="services-grid">
                 {activity.services?.length > 0 ? (
-                  activity.services.map(service => (
+                  activity.services.map((service) => (
                     <div key={service.id} className="service-tag">
                       {renderIcon(service.icon)}
                       <span>{service.name}</span>
@@ -139,24 +232,51 @@ const ActivityDetails = ({ activities }) => {
             <div className="gallery-card">
               <div className="gallery-header">
                 <span className="label">Image Gallery</span>
-                <span className="counter">{currentImg + 1} / {activity.gallery?.length}</span>
+                <span className="counter">
+                  {currentImg + 1} / {activity.gallery?.length}
+                </span>
               </div>
 
               <div className="main-stage">
-                <button className="nav-arrow prev" onClick={() => setCurrentImg(prev => prev === 0 ? activity.gallery.length - 1 : prev - 1)}>❮</button>
+                <button
+                  className="nav-arrow prev"
+                  onClick={() =>
+                    setCurrentImg((prev) =>
+                      prev === 0 ? activity.gallery.length - 1 : prev - 1,
+                    )
+                  }
+                >
+                  ❮
+                </button>
                 <div className="image-container">
                   {activity.gallery?.length > 0 ? (
-                    <img src={activity.gallery[currentImg]?.image} alt="Main" className="fade-img" key={currentImg} />
-                  ) : <div className="no-img">No images</div>}
+                    <img
+                      src={activity.gallery[currentImg]?.image}
+                      alt="Main"
+                      className="fade-img"
+                      key={currentImg}
+                    />
+                  ) : (
+                    <div className="no-img">No images</div>
+                  )}
                 </div>
-                <button className="nav-arrow next" onClick={() => setCurrentImg(prev => prev === activity.gallery.length - 1 ? 0 : prev + 1)}>❯</button>
+                <button
+                  className="nav-arrow next"
+                  onClick={() =>
+                    setCurrentImg((prev) =>
+                      prev === activity.gallery.length - 1 ? 0 : prev + 1,
+                    )
+                  }
+                >
+                  ❯
+                </button>
               </div>
 
               <div className="thumbnail-strip">
                 {activity.gallery?.map((img, idx) => (
                   <div
                     key={img.id}
-                    className={`thumb-box ${idx === currentImg ? 'active' : ''}`}
+                    className={`thumb-box ${idx === currentImg ? "active" : ""}`}
                     onClick={() => setCurrentImg(idx)}
                   >
                     <img src={img.image} alt="thumbnail" />
@@ -176,18 +296,30 @@ const ActivityDetails = ({ activities }) => {
               <h4>Instant Booking</h4>
               <div className="date-selector">
                 <button onClick={() => changeDate(-1)}>❮</button>
-                <span>{selectedDate.toLocaleDateString("en-US", { month: 'short', day: 'numeric' })}</span>
+                <span>
+                  {selectedDate.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
                 <button onClick={() => changeDate(1)}>❯</button>
               </div>
               <div className="slots-container">
                 {filteredSlots.length > 0 ? (
-                  filteredSlots.map(slot => (
+                  filteredSlots.map((slot) => (
                     <div key={slot.id} className="slot-row">
-                      <span className="time">{new Date(slot.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      <button className="book-btn">Book</button>
+                      <span className="time">
+                        {new Date(slot.start_time).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      <button className="book-btn" onClick={() => handleBookClick(slot)}>Book</button>
                     </div>
                   ))
-                ) : <p className="no-data">No slots</p>}
+                ) : (
+                  <p className="no-data">No slots</p>
+                )}
               </div>
             </div>
 
@@ -195,49 +327,69 @@ const ActivityDetails = ({ activities }) => {
             <div className="glass-panel reviews-panel">
               <div className="reviews-header">
                 <h4>Gym Reviews</h4>
-                <button className="add-review-btn" onClick={() => setShowReviewModal(true)}>
+                <button
+                  className="add-review-btn"
+                  onClick={() => setShowReviewModal(true)}
+                >
                   + Add Review
                 </button>
               </div>
               <div className="reviews-container">
-                {reviews.length > 0 ? reviews.map(r => (
-                  <div key={r.id} className="review-card-mini">
-                    <div className="rev-header">
-                      <div className="rev-avatar">{r.user_name?.[0]}</div>
-                      <div>
-                        <span className="rev-name">{r.user_name}</span>
-                        {r.rating && (
-                          <span className="rev-rating">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</span>
-                        )}
+                {reviews.length > 0 ? (
+                  // Прикажување на рецензиите наопаку (.reverse()) за најновата да биде прва горе
+                  [...reviews].reverse().map((r) => (
+                    <div key={r.id} className="review-card-mini">
+                      <div className="rev-header">
+                        <div className="rev-avatar">{r.user_name?.[0]?.toUpperCase()}</div>
+                        <div>
+                          <span className="rev-name">{r.user_name}</span>
+                          {r.rating && (
+                            <span className="rev-rating">
+                              {"★".repeat(r.rating)}
+                              {"☆".repeat(5 - r.rating)}
+                            </span>
+                          )}
+                        </div>
                       </div>
+                      <p>"{r.comment}"</p>
                     </div>
-                    <p>"{r.comment}"</p>
-                  </div>
-                )) : <p className="no-data">No reviews yet. Be the first!</p>}
+                  ))
+                ) : (
+                  <p className="no-data">No reviews yet. Be the first!</p>
+                )}
               </div>
             </div>
           </section>
-
         </div>
       </div>
 
       {/* REVIEW MODAL */}
       {showReviewModal && (
-        <div className="modal-overlay" onClick={() => setShowReviewModal(false)}>
-          <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          onClick={() => setShowReviewModal(false)}
+        >
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Write a Review</h3>
-              <button className="modal-close" onClick={() => setShowReviewModal(false)}>✕</button>
+              <button
+                className="modal-close"
+                onClick={() => setShowReviewModal(false)}
+              >
+                ✕
+              </button>
             </div>
 
             <div className="modal-body">
               <label className="modal-label">Rating</label>
               <div className="star-picker">
-                {[1, 2, 3, 4, 5].map(star => (
+                {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
                     className={`star-btn ${star <= reviewForm.rating ? "active" : ""}`}
-                    onClick={() => setReviewForm(f => ({ ...f, rating: star }))}
+                    onClick={() =>
+                      setReviewForm((f) => ({ ...f, rating: star }))
+                    }
                   >
                     ★
                   </button>
@@ -249,7 +401,9 @@ const ActivityDetails = ({ activities }) => {
                 className="modal-textarea"
                 placeholder="Share your experience..."
                 value={reviewForm.comment}
-                onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))}
+                onChange={(e) =>
+                  setReviewForm((f) => ({ ...f, comment: e.target.value }))
+                }
                 rows={4}
               />
 
@@ -257,13 +411,66 @@ const ActivityDetails = ({ activities }) => {
             </div>
 
             <div className="modal-footer">
-              <button className="modal-cancel" onClick={() => setShowReviewModal(false)}>Cancel</button>
+              <button
+                className="modal-cancel"
+                onClick={() => setShowReviewModal(false)}
+              >
+                Cancel
+              </button>
               <button
                 className="modal-submit"
                 onClick={handleReviewSubmit}
                 disabled={reviewSubmitting}
               >
                 {reviewSubmitting ? "Submitting..." : "Submit Review"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* RESERVATION MODAL */}
+      {showReservationModal && selectedSlot && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowReservationModal(false)}
+        >
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Confirm Your Booking</h3>
+              <button
+                className="modal-close"
+                onClick={() => setShowReservationModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <p>You are booking a slot for <strong>{activity.name}</strong>.</p>
+              
+              <div className="booking-details-summary" style={{ marginTop: "15px", padding: "10px", background: "rgba(255,255,255,0.05)", borderRadius: "6px" }}>
+                <p>📅 <strong>Date:</strong> {selectedDate.toLocaleDateString("en-US", { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+                <p>⏰ <strong>Time:</strong> {new Date(selectedSlot.start_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+                <p>📍 <strong>Type:</strong> {activity.activity_type}</p>
+              </div>
+
+              {reservationError && <p className="modal-error" style={{ color: "#ff4a4a", marginTop: "15px" }}>{reservationError}</p>}
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="modal-cancel"
+                onClick={() => setShowReservationModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="modal-submit"
+                onClick={handleReservationSubmit}
+                disabled={reservationSubmitting}
+              >
+                {reservationSubmitting ? "Processing..." : "Confirm Reservation"}
               </button>
             </div>
           </div>
